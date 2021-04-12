@@ -1,0 +1,29 @@
+{
+  "name": "api-afrodev2.0",
+  "version": "2.0.0",
+  "description": "Segunda API da afrodev",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/benmacario/api-AfroDev2.0.git"
+  },
+  "author": "Brendon Machado de Sousa",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/benmacario/api-AfroDev2.0/issues"
+  },
+  "homepage": "https://github.com/benmacario/api-AfroDev2.0#readme",
+  "dependencies": {
+    "config": "^3.3.6",
+    "express": "^4.17.1",
+    "mysql2": "^2.2.5",
+    "sequelize": "^6.6.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  }
+}
