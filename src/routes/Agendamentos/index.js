@@ -1,54 +1,76 @@
-const router = require('express').Router();
+const router = require('express').Router()
 const TabelaAgendamento = require('../../agendamentos/TabelaAgendamento');
-const Agendamento = require('../../agendamentos/Agendamento');
+const Agendamento = require('../../agendamentos/Agendamento')
+const SerializadorAgendamento = require('../../../Serializar').SerializarAgendamento;
 
-router.post('/agendamentos', async(req, res) => {
-  const infoAgendamentos = req.body;
-  const agendamento = new Agendamento(infoAgendamentos);
-
-  await agendamento.criar();
-
-  res.send(JSON.stringify(agendamento));
+router.get('/agendamentos', async (req, resp, next) => {
+    try {
+        const results = await TabelaAgendamento.listar();
+        const serializador = new SerializadorAgendamento(
+            resp.getHeader('Content-Type'),
+            ['nome_servico']
+        );
+        agendamentos = serializador.transformar(results)
+        resp.status(200).send(agendamentos);
+    } catch (error) {
+        next(error)
+    }
 });
 
-router.get('/agendamentos', async(req, res) => {
-  const results = await TabelaAgendamento.listar();
-
-  res.send(JSON.stringify(results));
+router.get('/agendamentos/:id', async (req, resp, next) => {
+    try {
+        const { id } = req.params;
+        const agendamento = new Agendamento({ id:id });
+        await agendamento.buscar();
+        const serializador = new SerializadorAgendamento(
+            resp.getHeader('Content-Type'),
+            ['nome_servico', 'status']
+        );
+        resp.status(200).send(serializador.transformar(agendamento));
+    } catch (error) {
+        next(error)
+    }
 });
 
-router.get('/agendamentos/:id', async(req, res) => {
-  try {
-      const { id } = req.params;
-      const agendamento = new Agendamento({ id:id });
-
-      await agendamento.buscar();
-
-      resp.send(JSON.stringify(agendamento));
-  } catch(error) {
-      res.send(JSON.stringify(
-        {
-          mensage: error.message
-        }
-      ));
-  }
+router.post('/agendamentos', async (req, resp, next) => {
+    try {
+        const reqAgendamento = req.body;
+        const agendamento = new Agendamento(reqAgendamento);
+        await agendamento.criar()
+        const serializador = new SerializadorAgendamento(
+            resp.getHeader('Content-Type'),
+            ['status']
+        );
+        resp.status(201).send(serializador.transformar(agendamento));
+    } catch (error) {
+        next(error)
+    }
+    
 });
 
-router.delete('/agendamentos/:id', async(req, res) => {
-  try {
-      const { id } = req.params;
-      const agendamento = new Agendamento({ id:id });
+router.put('/agendamentos/:id', async (req, resp, next) => {
+    try{
+        const { id } = req.params;
+        const dadosBody = req.body;
+        const dados = Object.assign({}, dadosBody, { id: id })
+        const agendamento = new Agendamento(dados);
+        await agendamento.atualizar();
+        resp.status(204).send();
+    } catch (error) {
+        next(error)
+    }
 
-      await agendamento.remover();
-
-      resp.status(204).send('Registro removido')
-  } catch(error) {
-      res.send(JSON.stringify(
-        {
-          mensage: error.message
-        }
-      ));
-  }
 });
 
-module.exports = router;
+router.delete('/agendamentos/:id', async (req, resp, next) => {
+    try {
+        const { id } = req.params;
+        const agendamento = new Agendamento({ id:id });
+        await agendamento.remover();
+        resp.status(204).send()
+    } catch (error) {
+        next(error)
+    }
+});
+
+module.exports = router

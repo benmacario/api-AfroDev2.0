@@ -1,7 +1,9 @@
 const express = require('./src/config/express');
 const config = require('config');
-const app = express();
 
-app.listen(config.get('api.port'), () => {
-  console.log("Servidor Rodando");
+const app = express();
+const port = config.get('api.port');
+
+app.listen(port, () => {
+  console.info(`Servidor Rodando na porta ${port}`);
 });

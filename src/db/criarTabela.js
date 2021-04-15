@@ -1,8 +1,18 @@
-const ModelTabelaAgendamento = require('../agendamentos/ModelTabelaAgendamento');
+const ModeloTabelaAgendamento = require('../agendamentos/modelTabelaAgendamento');
+const ModeloTabelaUsuario = require('../usuarios/modelTabelaUsuario');
 
-ModelTabelaAgendamento.sync()
-  .then(() => {
-      console.log('Success: Tabela criada');;
-  }).catch(
-      console.log("Error: Tabela nao criada")
-  );
+ModeloTabelaAgendamento.sync()
+    .then(()=> {
+        console.log('Tabela criada com sucesso')
+    })
+    .catch((error) => {
+        console.log('Erro, tabela não criada', error)
+    });
+
+ModeloTabelaUsuario.sync()
+    .then(()=> {
+        console.log('Tabela criada com sucesso')
+    })
+    .catch((error) => {
+        console.log('Erro, tabela não criada', error)
+    });
