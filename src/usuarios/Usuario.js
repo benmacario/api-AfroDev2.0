@@ -3,6 +3,8 @@ const CampoInvalido = require('../errors/CampoInvalido');
 const CampoQtdMinima = require('../errors/CampoQtdMinima');
 const CampoQtdMaxima = require('../errors/CampoQtdMaxima');
 const NaoEncontrado = require('../errors/NaoEncontrado');
+const bcrypt = require('bcrypt');
+const DadosNaoInformados = require('../errors/DadosNaoInformados');
 
 class Usuario {
   constructor({id, nome, email, senha, data_criacao, data_atualizacao}) {
@@ -16,6 +18,10 @@ class Usuario {
   };
 
   async criar() {
+    this.validar();
+    
+    await this.gerarSenha();
+    
     const result = await TabelaUsuario.adicionar({
       nome: this.nome,
       email: this.email,
@@ -48,9 +54,9 @@ class Usuario {
   };
 
   async atualizar() {
+    const result = await TabelaUsuario.buscarPorPK(this.id);
     const camposAtualizar = ['nome', 'email', 'senha'];
     const dadosAtualizar = [];
-    const result = await TabelaUsuario.buscarPorPK(this.id);
 
     if(!result) {
       throw new NaoEncontrado('Usuário');
@@ -63,6 +69,12 @@ class Usuario {
         dadosAtualizar[campo] = valor;
       };
     });
+
+    if(Object.keys(dadosAtualizar).length === 0) {
+      throw new DadosNaoInformados();
+    }
+
+    this.validar();
 
     await TabelaUsuario.atualizar(this.id, dadosAtualizar);
   };
@@ -89,6 +101,16 @@ class Usuario {
         throw new CampoQtdMaxima(campo);
       }
     })
+  }
+
+  async gerarHash(campo){
+    const saltRounds = 12;
+
+    return await bcrypt.hash(campo, saltRounds);
+  }
+
+  async gerarSenha() {
+    this.senhaHash = await this.gerarHash(this.senha);
   }
 }
 

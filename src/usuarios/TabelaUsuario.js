@@ -1,4 +1,3 @@
-const { listar, buscarPorPK, remover } = require('../agendamentos/TabelaAgendamento');
 const modelUsuarios = require('./modelTabelaUsuario');
 
 module.exports = {

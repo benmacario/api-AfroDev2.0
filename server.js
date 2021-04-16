@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require('./src/config/express');
 const config = require('config');
 

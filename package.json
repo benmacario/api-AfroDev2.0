@@ -2,10 +2,10 @@
   "name": "api-afrodev2.0",
   "version": "2.0.0",
   "description": "Segunda API da afrodev",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon index.js"
+    "dev": "nodemon server.js"
   },
   "repository": {
     "type": "git",
@@ -18,10 +18,17 @@
   },
   "homepage": "https://github.com/benmacario/api-AfroDev2.0#readme",
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "config": "^3.3.6",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "install": "^0.13.0",
     "jsontoxml": "^1.0.1",
+    "jsonwebtoken": "^8.5.1",
     "mysql2": "^2.2.5",
+    "passport": "^0.4.1",
+    "passport-http-bearer": "^1.0.1",
+    "passport-local": "^1.0.0",
     "sequelize": "^6.6.2"
   },
   "devDependencies": {
